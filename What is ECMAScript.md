@@ -126,34 +126,6 @@ We’ve created an anonymous function to hide the variables, and then defined th
 Thankfully the solution is simple: return the inner object when the anonymous function is called, and assign it to the outside variable 
 
 ```js
-
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
 var person = function () {
  
   var fullName = "Jason Shapiro";
