@@ -310,8 +310,38 @@ Bubbling is useful. It frees us from listening for an event on the exact element
 
 * Explain the use cases for, and differences between — `bind`, `apply` and `call`.
 * Explain event delegation and why it is useful.
+
+Event delegation allows us to attach a single event listener, to a parent element, that will fire for all descendants matching a selector, whether those descendants exist now or are added in the future.
+
 * What is the event loop?
+
+A JavaScript runtime contains a message queue, which is a list of messages to be processed. A function is associated with each message. When the stack has enough capacity, a message is taken out of the queue and processed. The processing consists of calling the associated function (and thus creating an initial stack frame). The message processing ends when the stack becomes empty again.
+
+Each message is processed completely before any other message is processed. This offers some nice properties when reasoning about your program, including the fact that whenever a function runs, it cannot be pre-empted and will run entirely before any other code runs (and can modify data the function manipulates). This differs from C, for instance, where if a function runs in a thread, it can be stopped at any point to run some other code in another thread.
+
+A downside of this model is that if a message takes too long to complete, the web application is unable to process user interactions like click or scroll. The browser mitigates this with the "a script is taking too long to run" dialog. A good practice to follow is to make message processing short and if possible cut down one message into several messages.
+
+In web browsers, messages are added anytime an event occurs and there is an event listener attached to it. If there is no listener, the event is lost. 
+
+The function setTimeout is called with 2 arguments: a message to add to the queue, and a time value (optional; defaults to 0). The time value represents the (minimum) delay after which the message will actually be executed. If there is no other message in the queue, the message is processed right after the delay; however, if there are messages, the setTimeout message will have to wait for other messages to be processed. For that reason, the second argument indicates a minimum time and not a guaranteed time.
+
+
 * How does hoisting work in JavaScript?
+
+Within its current scope, regardless of where a variable is declared, it will be, behind the scenes, hoisted to the top. However, only the declaration will be hoisted. If the variable is also initialized, the current value, at the top of the scope, will initially be set to undefined.
+
+```
+var myvar = 'my value'; 
+  
+(function() { 
+  alert(myvar); // undefined 
+  var myvar = 'local value'; 
+})();
+```
+
+It should now make perfect sense why myvar is alerting undefined. As we learned, as soon as the local variable, myvar, was declared, it was automatically hoisted to the top of the function scope…above the alert. As a result, the variable had already been declared at the time of the alert; however, because initializations aren’t hoisted as well, the value of the variable is: undefined.
+
+
 * Which new JavaScript features are you most excited about and why?
 * Prototypal inheritance is so cool for JavaScript especially when trying to keep code DRY and maintainable, but do you know what's the output for the code below?
   ~~~JavaScript
@@ -373,12 +403,58 @@ console.log('script end')
 ## <a name='html'>HTML</a>
 
 * What is `<!DOCTYPE>` tag? How to use it?
+
+Basically, the DOCTYPE describes the HTML that will be used in your page.
+
+Browsers also use the DOCTYPE to determine how to render a page. Not including a DOCTYPE or including an incorrect DOCTYPE can trigger quirks mode. The kicker here is that quirks mode in Internet Explorer is quite different from quirks mode in Firefox (and other browsers), meaning that you'll have a much harder job trying to ensure your page works consistently in all browsers if pages are rendered in quirks mode than you will if they are rendered in standards mode.
+
+
 * What's the difference between childNodes[] and children[]?
 * DOM structure – how nodes are related to one another and how to traverse from one to the next.
 * DOM manipulation – how to add, remove, move, copy, create, and find nodes.
 * Strict vs quirks modes – how to trigger each and why this matters.
 * Block vs inline elements – how to manipulate using CSS, how they effect things around them and your ability to style them.
+
+All HTML elements are naturally displayed in one of the following ways:
+
+- Block
+Takes up the full width available, with a new line before and after (display:block;)
+- Inline
+Takes up only as much width as it needs, and does not force new lines (display:inline;)
+- Not displayed
+Some tags, like <meta /> and <style> are not visible (display:none;)
+
+A block element is an element that has, but may not be limited to, the following characteristics:
+
+1. If no width is set, will expand naturally to fill its parent container
+2. Can have margins and/or padding
+3. If no height is set, will expand naturally to fit its child elements (assuming they are not floated or positioned)
+4. By default, will be placed below previous elements in the markup (assuming no floats or positioning on surrounding elements)
+5. Ignores the vertical-align property
+
+So, for a block element, it’s not necessary to give it a set width or to give it a width of 100% if you want it to fill its parent horizontally.
+
+And, as the fourth item in the above list indicates, it’s also not necessary to “clear” a block element; assuming no floats are affecting the block element, it will be cleared automatically and will start on the next “line” in the page’s output.
+
+An inline element has, but may not be limited to, the following characteristics:
+
+- Flows along with text content, thus
+- Will not clear previous content to drop to the next line like block elements
+- Is subject to white-space settings in CSS
+- Will ignore top and bottom margin settings, but will apply left and right margins, and any padding
+- Will ignore the width and height properties
+- If floated left or right, will automatically become a block-level element, subject to all block characteristics
+- Is subject to the vertical-align property
+
+You have the option to change any block-level element to an inline element, and vice-versa, using the display property.
+
 * Floating elements – how to use them, troubles with them, and how to work around the troubles.
+
+The float CSS property specifies that an element should be placed along the left or right side of its container, allowing text and inline elements to wrap around it. The element is removed from the normal flow of the web page, though still remaining a part of the flow.
+
+As mentioned above, when an element is floated, it is taken out of the normal flow of the document (though still remaining part of it). It is shifted to the left, or right, until it touches the edge of its containing box, or another floated element.
+
+
 * HTML vs. XHTML(1.x&2) – how they're different, why you might want to use one over the other.
 * List semantic elements in HTML5 as much as you can and why we need them.
 * Write a 'Hello, Word!' html page. (whether get to know the necessary HTML tag for one page, DOCTYPE definition,...).
