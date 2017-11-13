@@ -97,33 +97,189 @@ null is an assignment value. It can be assigned to a variable as a representatio
 
 * What's JavaScript strict mode? What's the intent for it? What does it do? How do you use it?
 
+Strict mode makes several changes to normal JavaScript semantics. First, strict mode eliminates some JavaScript silent errors by changing them to throw errors. Second, strict mode fixes mistakes that make it difficult for JavaScript engines to perform optimizations: strict mode code can sometimes be made to run faster than identical code that's not strict mode. Third, strict mode prohibits some syntax likely to be defined in future versions of ECMAScript.
 
 * What is AJAX? What the workflow for AJAX? How to implement CORS? What's the difference synchronous and asynchronous for JavaScript?
+
+Ajax is not a programming language or a tool, but a concept. Ajax is a client-side script that communicates to and from a server/database without the need for a postback or a complete page refresh. The best definition I’ve read for Ajax is “the method of exchanging data with a server, and updating parts of a web page – without reloading the entire page.” 
+
+Ajax itself is mostly a generic term for various JavaScript techniques used to connect to a web server dynamically without necessarily loading multiple pages. In a more narrowly-defined sense, it refers to the use of `XmlHttpRequest` objects to interact with a web server dynamically via JavaScript.
+
+While Node itself is single threaded, there are some task that can run in parallel. For example, File System operations occur in a different process.
+
+That's why Node can do async operations: one thread is doing file system operations, while the main Node thread keeps executing your javascript code. In an event-driven server like Node, the file system thread notifies the main Node thread of certain events such as completion, failure, or progress, along with any data associated with that event (such as the result of a database query or an error message) and the main Node thread decides what to do with that data.
+
+`Access-Control-Allow-Origin` only accepts * or a single origin.
+
+If you want to support multiple origins but not all of them, then you must:
+
+look at the `Origin` request header
+check if it is on your list of acceptable origins
+put it in the `Access-Control-Allow-Origin` response header
+
 * Say something about JavaScript Encapsulation.
+
+Not so simply put, a closure is an inner-scope which has access to all of the variables defined outside of its block, even after those variables would have normally “fallen out of scope.”   Although methods of an object can’t see each other’s local variables, an inner object does have access to the local variables of its parent function.
+
+We’ve created an anonymous function to hide the variables, and then defined the object as an inner object, in order to grant it access to the private variables.  But how do we expose the inner object to the outside world? 
+
+Thankfully the solution is simple: return the inner object when the anonymous function is called, and assign it to the outside variable 
+
+```js
+
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+var person = function () {
+ 
+  var fullName = "Jason Shapiro";
+  var reg = new RegExp(/\d+/);
+ 
+  return { 
+    setFullName : function (newValue) {
+      if( reg.test(newValue) ) {
+        alert("Invalid Name");
+      }
+      else {
+        fullName = newValue;
+      }
+    },
+    getFullName : function () {
+     return fullName; 
+    }
+  }; // end of the return
+}(); // Note the '()', this means we're calling the function 
+     // and assigning the *returned object,* instead of 
+     // the *function itself* for the value of 'person.'
+```
+
 * Say something about JavaScript Inheritance(Classical Versus Modern Inheritance).
+
+Prototype chaining means an objects dunder proto or proto will point to another object instead of pointing to the constructor function prototype. If the other object’s dunder proto or proto property points to another object it will results into chain. This is prototype chaining.
+
+Above code defines two consructor functions, SuperType and SubType. By default, SubType.prototype has a constructor function which points to the constructor function itself and proto property which inherits the default object properties.
+
+Above line rewrites the default prototype or he dunder proto property of the SubType constructon function and makes SubType.prototype to point to an object of SuperType constructor function.
+This means that all the properties and methods that typically exists on an instance of SuperType now also on SubType.prototype This means that now, SubType function has access to all the SuperType properties and methods.
+
+To fix this issue, we use constructor to inherit the instance properties and prototype chaining to to inherit methods and share properties
+
+
 * What is Closure?
+
+Languages such as Java provide the ability to declare methods private, meaning that they can only be called by other methods in the same class.
+
+JavaScript does not provide a native way of doing this, but it is possible to emulate private methods using closures. Private methods aren't just useful for restricting access to code: they also provide a powerful way of managing your global namespace, keeping non-essential methods from cluttering up the public interface to your code.
+
+The shared lexical environment is created in the body of an anonymous function, which is executed as soon as it has been defined. 
+
+Those three public functions are closures that share the same environment. Thanks to JavaScript's lexical scoping, they each have access to the privateCounter variable and changeBy function.
+
+
 * When and why you need to use `this` keyword?
+
+In most cases, the value of this is determined by how a function is called. It can't be set by assignment during execution, and it may be different each time the function is called. ES5 introduced the bind method to set the value of a function's this regardless of how it's called, and ES2015 introduced arrow functions which do provide their own this binding (it remains the this value of the enclosing lexical context).
+
 * How to handle cookie using JavaScript?
+
+
+
 * DOM manipulation – how to add, remove, move, copy, create, and find nodes.
+
+
+
 * As for JavaScript regex, what is greediness, lazy, negated character classes matching? How to write a regex to match `<script>greediness</script>`?
+
+
 * Events - how to use them and the major differences between IE and the DOM event models?
+
+In JavaScript, we can listen to events using this:
+```
+element.addEventListener(<event-name>, <callback>, <use-capture>);
+```
+
+Removing event listeners once they are no longer needed is a best practice (especially in long-running Web applications). To do this, use the element.removeEventListener() method:
+```
+element.removeEventListener(<event-name>, <callback>, <use-capture>);
+```
+But `removeEventListener` has one catch: You must have a reference to the callback function that was originally bound. Simply calling element.removeEventListener('click'); will not work.
+
+The event object is created when the event first happens; it travels with the event on its journey through the DOM. The function that we assign as a callback to an event listener is passed the event object as its first argument. We can use this object to access a wealth of information about the event that has occurred.
+
+When a DOM event fires in your app, it doesn’t just fire once where the event originated; it embarks on a journey of three phases. In short, the event flows from the document’s root to the target (i.e. capture phase), then fires on the event target (target phase), then flows back to the document’s root (bubbling phase).
+
+As mentioned, you can listen to events in the capture phase by setting the third argument of addEventListener to true. I have not found many use cases for capture phase listeners, but you could potentially prevent any clicks from firing in a certain element if the event is handled in the capture phase.
+
+Bubbling is useful. It frees us from listening for an event on the exact element it came from; instead, we listen on an element further up the DOM tree, waiting for the event to reach us. 
+
+
+  
 * XMLHttpRequest – what it is, how to perform a complete GET request, how to detect errors?
+
+
 * JSON – what it is, why you'd want to use it, how to actually use it, implementation details?
+
+
 * Promise - what it is, and why we need that? What problems do it solve?
+
+
 * Using only a single event handler on the parent, detect a swipe left and a swipe right and alert() which direction was swiped.
+
+
 * Write an example of a closure in javascript. It doesn't matter what the code does, as long as it shows a closure is created.
+
+
 * Difference between `document.write` and `innerHTML`.
+
+
 * How `delete` operator works in JavaScript? What exactly can and cannot be deleted and why.
+
+
 * How does prototypal inheritance work?
+
+
 * What defines a closure?
+
+
 * How does the meaning of this keyword change?
+
+
 * How does one use to apply/bind/map/filter/call?
+
+
 * Say how would you describe the flow-control steps of this program?
+
   ~~~JavaScript
   makeAjaxRequest( url, function(response){ alert( "Response: " + response ); } );
   ~~~
 
 * Write a factorial function.
+
+
 * Write a function that accepts a string then reverses it. Recursively is better.
   ~~~JavaScript
   function reverseString(str) {
