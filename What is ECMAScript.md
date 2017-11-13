@@ -66,14 +66,38 @@ ramp-up cost) or cut features
 ## <a name='javascript'>JavaScript</a>
 
 * What is ECMAScript, JScript?
+
 ECMAScript is a subset of JavaScript. JavaScript is basically ECMAScript at its core but builds upon it. Languages such as ActionScript, JavaScript, JScript all use ECMAScript as its core. As a comparison, AS/JS/JScript are 3 different cars, but they all use the same engine... each of their exteriors is different though, and there have been several modifications done to each to make it unique.
 
 The history is, Brendan Eich created Mocha which became LiveScript, and later JavaScript. Netscape presented JavaScript to Ecma International, which develops standards and it was renamed to ECMA-262 aka ECMAScript.
 
 It's important to note that Brendan Eich's "JavaScript" is not the same JavaScript that is a dialect of ECMAScript. He built the core language which was renamed to ECMAScript, which differs from the JavaScript which browser-vendors implement nowadays.
+
 * What is the Document Object Model(DOM)?
+
+The Document Object Model (DOM) is a programming interface for HTML and XML documents. It represents the page so that programs can change the document structure, style and content. The DOM represents the document as nodes and objects. That way, programming languages can connect to the page.
+
+The Document Object Model (DOM) represents that same document so it can be manipulated. The DOM is an object-oriented representation of the web page, which can be modified with a scripting language such as JavaScript.
+
 * What's different between undefined and null? It's better to say something about why we need undefined if we have had null.
+
+In JavaScript, undefined means a variable has been declared but has not yet been assigned a value:
+```
+var TestVar;
+alert(TestVar); //shows undefined
+alert(typeof TestVar); //shows undefined
+```
+null is an assignment value. It can be assigned to a variable as a representation of no value:
+```
+ var TestVar = null;
+ alert(TestVar); //shows null
+ alert(typeof TestVar); //shows object
+```
+
+
 * What's JavaScript strict mode? What's the intent for it? What does it do? How do you use it?
+
+
 * What is AJAX? What the workflow for AJAX? How to implement CORS? What's the difference synchronous and asynchronous for JavaScript?
 * Say something about JavaScript Encapsulation.
 * Say something about JavaScript Inheritance(Classical Versus Modern Inheritance).
